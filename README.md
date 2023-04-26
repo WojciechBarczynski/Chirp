@@ -190,5 +190,3 @@ FOR (user:USER) REQUIRE user.username IS UNIQUE
 CREATE CONSTRAINT unique_tag_name 
 FOR (tag:TAG) REQUIRE tag.name IS UNIQUE
 ```
-
-#### Unique nodes relationships constraints
