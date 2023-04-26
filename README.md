@@ -101,3 +101,94 @@ case class CommentedOn()
 ```scala
 case class Tagged()
 ```
+
+## Cypher commends
+### Addind nodes
+1. Add user
+```scala
+CREATE (user:USER {
+    email: "email@gmail.com", 
+    username: "JanKowlaski", 
+    password_hash: "SOME_PASSWORD_HASH", 
+    photo: "SOME_PHOTO_URL", 
+    bio: "SOME_BIO", 
+    status: "SOME_USER_STATUS"
+})
+```
+2. Add post
+```scala
+CREATE (post:POST {
+    content: "SOME_CONTENT",
+    resources: ["resource_url_0", "resource_url_1"]
+})
+```
+3. Add tag
+```scala
+CREATE (tag:TAG {name: "SOME_TAG_NAME"})
+```
+
+### Adding relationships
+1. Add `FOLLOW` relationship. </br>
+User with email: `"email0"` follows user with email: `"email1"` with `level` `"level"`.
+```scala
+MATCH (u0:USER {email: "email0"}), (u1:USER {email: "email1"}) 
+CREATE (u0)-[r:FOLLOWS {level: "level"}]->(u1)
+```
+
+2. Add `REACTED_TO` relationship. </br>
+User `user` reacts to post `post` with reaction type `type`.
+```scala
+CREATE (user)-[r:REACTED_TO {reaction_type: "type"}]->(post)
+```
+
+3. Add `SHARED` relationship. </br>
+User `user` share post `post` on `datetime`.
+```scala
+CREATE (user)-[r:SHARED {datetime: datetime("datetime")}]-(post)
+```
+
+4. Add `CREATED_BY` relationship. </br>
+Post `post` is created by user `user` on `datetime`.
+```scala
+CREATE (post)-[r:CREATED_BY {datetime: datetime("datetime")}]-(user)
+```
+
+5. Add `SUBSCRIBES` relationship. </br>
+User `user` subscribes tag `tag` with level `"level"`.
+```scala
+CREATE (user)-[r:SUBSCRIBES {level: "level"}]-(tag)
+```
+
+6. Add `COMMENTED_ON` relationship. </br>
+Post `comment_post` comments on post `post`.
+```scala
+CREATE (comment_post)-[r:COMMENTED_ON]-(post)
+```
+
+7. Add `TAGGED` relationship. </br>
+Post `post` gets tagged with tag `tag`.
+```scala
+CREATE (post)-[r:TAGGED]-(tag)
+```
+
+### Constraints
+#### Unique nodes values constraints
+1. User unique_email 
+```scala
+CREATE CONSTRAINT unique_email 
+FOR (user:USER) REQUIRE user.email IS UNIQUE
+```
+
+2. User unique_username
+```scala
+CREATE CONSTRAINT unique_username 
+FOR (user:USER) REQUIRE user.username IS UNIQUE
+```
+
+3. Tag unique_name
+```scala
+CREATE CONSTRAINT unique_tag_name 
+FOR (tag:TAG) REQUIRE tag.name IS UNIQUE
+```
+
+#### Unique nodes relationships constraints
