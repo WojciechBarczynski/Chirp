@@ -32,3 +32,72 @@ As a user I want to share posts in order to show them to my followers.
 
 ## Database diagram
 ![image](https://user-images.githubusercontent.com/63919870/234395692-d3da90df-de68-4ceb-b1fc-ddc0af2fdab6.png)
+
+## Data model
+Nodes and relationships can be mapped by Scala's case classes.
+
+### Nodes model
+1. User node:
+```scala
+enum UserStatus: 
+  case Active, Blocked, Deleted
+
+case class User(email: String, username: String, password_hash: String, photo: String, bio: String, status: UserStatus)
+```
+
+2. Post node:
+```scala
+enum ResourceKind:
+  case Photo, Link
+
+case class Resource(kind: ResourceKind, url: String)
+
+case class Post(content: String, resources: List[Resource])
+```
+
+3. Tag node:
+```scala
+case class Tag(name: String)
+```
+
+### Relationships model
+1. Follows | User -> User relationship
+```scala
+enum FollowLevel:
+  case AllPosts, PopularPosts, RandomPosts, Blocked
+
+case class Follows(level: FollowLevel)
+```
+
+2. ReactedTo | User -> Post relationship
+```scala
+enum ReactionType:
+  case Like, Love, Haha, Wow, Sad, Angry
+
+case class ReactedTo(reaction_type: ReactionType)
+```
+
+3. Shared | User -> Post relationship
+```scala
+case class Shared(datetime: DateTime)
+```
+
+4. CreatedBy | Post -> User relationship
+```scala
+case class CreatedBy(datetime: DateTime)
+```
+
+5. Subscribes | User -> Tag relationship
+```scala
+case class Subscribes(level: FollowLevel)
+```
+
+6. CommentedOn | Post -> Post relationship
+```scala
+case class CommentedOn()
+```
+
+7. Tagged | Post -> Tag relationship
+```scala
+case class Tagged()
+```
