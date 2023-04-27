@@ -104,8 +104,8 @@ case class CommentedOn()
 case class Tagged()
 ```
 
-## Cypher commends
-### Addind nodes
+## Cypher commands
+### Adding nodes
 1. Add user
 ```scala
 CREATE (user:USER {
@@ -131,7 +131,7 @@ CREATE (tag:TAG {name: "SOME_TAG_NAME"})
 
 ### Adding relationships
 1. Add `FOLLOW` relationship. </br>
-User with email: `"email0"` follows user with email: `"email1"` with `level` `"level"`.
+User with email: `"email0"` follows user with email: `"email1"` with level `"level"`.
 ```scala
 MATCH (u0:USER {email: "email0"}), (u1:USER {email: "email1"}) 
 CREATE (u0)-[r:FOLLOWS {level: "level"}]->(u1)
