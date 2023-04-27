@@ -190,3 +190,35 @@ FOR (user:USER) REQUIRE user.username IS UNIQUE
 CREATE CONSTRAINT unique_tag_name 
 FOR (tag:TAG) REQUIRE tag.name IS UNIQUE
 ```
+
+### Returning DB objects
+
+1. Return all nodes:
+```scala
+MATCH (n) RETURN n
+```
+
+2. Return all follow relationships
+```scala
+MATCH p=()-[:FOLLOWS]->() RETURN p
+```
+
+3. Return all users followed by user with email `email`
+```scala
+MATCH p=(user:USER {email: "email"})-[:FOLLOWS]->() RETURN p
+```
+
+4. Return all users following user with email `email`
+```scala
+MATCH p=()-[:FOLLOWS]->(user:USER {email: "barczynski.w@gmail.com"}) RETURN p
+```
+
+5. Return all post tagged with tag named `tag_name`
+```scala
+MATCH p=()-[:TAGGED]->(tag:TAG {name: "tag_name"}) RETURN p
+```
+
+6. Get all posts created by user with email `user_email`
+```scala
+MATCH p=()-[:CREATED_BY]->(user:USER {email: "user_email"}) RETURN p
+```
