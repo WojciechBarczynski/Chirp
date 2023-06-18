@@ -41,3 +41,6 @@ bin/
 
 # general
 *.class
+
+# configs
+db_querying_service/db_config.toml
