@@ -32,8 +32,9 @@ def execute():
     
     records_data = []
     for record in records:        
-        record_properties = list(record.data().values())[0]
-        record_properties["id"] = parse_id(record.value().element_id)
+        node = record.items()[0][1]
+        record_properties = node._properties
+        record_properties["id"] = parse_id(node._element_id)
         records_data.append(record_properties)
         
     return records_data
