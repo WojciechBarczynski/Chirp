@@ -1,5 +1,18 @@
 package objects.nodes
 
-class Tag(val id: String, val name: String) {
+import io.circe.{Decoder, parser}
 
+
+case class Tag(id: String, name: String)
+
+def parseTags(tagsJsonString: String): List[Tag] = {
+
+  implicit val tagDecoder: Decoder[Tag] = Decoder.forProduct2("id", "name")(Tag.apply)
+
+  parser.decode[List[Tag]](tagsJsonString) match {
+    case Right(tags) => tags
+    case Left(ex) =>
+      println(s"Error: $ex")
+      List[Tag]()
+  }
 }
