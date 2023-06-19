@@ -6,17 +6,24 @@ import scala.collection.mutable
 import scala.collection.mutable.HashMap;
 
 object RecommendationEngine {
-  def getUserRecommendedPosts(userName: String) = {
+  def getUserRecommendedPosts(userName: String): List[Post] = {
     var scores: mutable.HashMap[Post, Double] = new mutable.HashMap();
-    val allPosts = Posts.getAllPosts();
+    val allPosts = Posts.getAllPosts;
 
     allPosts.foreach(post => scores.put(post, 0.0));
 
     addFollowedUsersScore(scores, userName);
     addSubscribedTagsScore(scores, userName);
+    addReactionsScore(scores);
+
+    scores
+      .toSeq
+      .sortBy(_._2)
+      .map((post, score) => post)
+      .toList
   }
 
-  private def addFollowedUsersScore(scores: mutable.HashMap[Post, Double], userName: String) = {
+  private def addFollowedUsersScore(scores: mutable.HashMap[Post, Double], userName: String): Unit = {
     val followedUsersPostsQuery =
       s"MATCH (follower:USER {name:\"${userName}\"})-[:FOLLOW]->(followed:USER)-[:CREATED]->(post:POST) RETURN post;";
 
@@ -27,7 +34,7 @@ object RecommendationEngine {
     );
   }
 
-  private def addSubscribedTagsScore(scores: mutable.HashMap[Post, Double], userName: String) = {
+  private def addSubscribedTagsScore(scores: mutable.HashMap[Post, Double], userName: String): Unit = {
     val subscribedTagsPosts =
       s"MATCH (user:USER {name: \"${userName}\"})-[:SUBSCRIBE]->(tag:TAG)<-[:TAGGED]-(post:POST) RETURN post;"
 
@@ -36,11 +43,11 @@ object RecommendationEngine {
     posts.foreach(post => updateScore(scores, post));
   }
   
-//  private def addReactionsScore(scores: mutable.HashMap[Post, Double]) = {
-//    val postReactions: mutable.HashMap[Post, Int] = new mutable.HashMap();
-//    
-//    scores.keys.foreach(post => )
-//  }
+  private def addReactionsScore(scores: mutable.HashMap[Post, Double]): Unit = {
+    val postReactions: mutable.HashMap[Post, Int] = new mutable.HashMap();
+
+    scores.keys.foreach(post => Posts.getPostReactions(post.id));
+  }
   
   private def updateScore(scores: mutable.HashMap[Post, Double], post: Post): Unit = {
     val score = scores.get(post);

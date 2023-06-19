@@ -49,7 +49,8 @@ object Server extends cask.MainRoutes {
 
   @cask.post("/users/recommendedPosts")
   def recommendedPosts(userName: String): Unit = {
-    RecommendationEngine.getUserRecommendedPosts(userName);
+    val recommendedPosts = RecommendationEngine.getUserRecommendedPosts(stripString(userName));
+    println(recommendedPosts);
   }
 
   initialize()

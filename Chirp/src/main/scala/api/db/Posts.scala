@@ -2,6 +2,7 @@ package api.db
 
 import objects.nodes.Post
 import objects.nodes.parsePosts
+import objects.relations.{ReactedTo, parseReactedTo}
 import objects.{ReactionType, reactionTypeToString}
 
 object Posts {
@@ -9,7 +10,7 @@ object Posts {
     val createReactionQuery =
       s"MATCH (post:POST), (user:USER {name: \"${userName}\"}) " +
         s"WHERE ID(post) = ${postId} " +
-        s"CREATE (user)-[r:REACTED_TO {reaction_type: \"${reactionTypeToString(reactionType)}\"}]->(post);";
+        s"CREATE (user)-[r:REACTED_TO {reactionType: \"${reactionTypeToString(reactionType)}\"}]->(post);";
     DbManager.executeRequest(createReactionQuery);
   }
 
@@ -34,7 +35,7 @@ object Posts {
     );
   }
 
-  def getAllPosts(): List[Post] = {
+  def getAllPosts: List[Post] = {
     val getAllPostsQuery = s"MATCH (post:POST) RETURN post;";
     parsePosts(DbManager.executeRequest(getAllPostsQuery))
   }
@@ -44,7 +45,8 @@ object Posts {
     parsePosts(DbManager.executeRequest(getUserPostsQuery))
   }
 
-//  def getPostReactions(postId: String): List[ReactionType] = {
-//
-//  }
+  def getPostReactions(postId: String): List[ReactedTo] = {
+    val getPostReactionsQuery = s"MATCH (user:USER)-[p:REACTED_TO]->(post:POST) WHERE ID(post) = ${postId} RETURN p;"
+    parseReactedTo(DbManager.executeRequest(getPostReactionsQuery))
+  }
 }
