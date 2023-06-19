@@ -42,6 +42,11 @@ object Server extends cask.MainRoutes {
     Tags.subscribeTag(strippedUserName, strippedTagName);
   }
 
+  @cask.post("/users/follow")
+  def followUser(followerUserName: String, followedUserName: String, level: Int): Unit = {
+    Users.followUser(stripString(followerUserName), stripString(followedUserName), level);
+  }
+
   initialize()
 }
 
