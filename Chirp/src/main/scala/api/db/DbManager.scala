@@ -14,6 +14,6 @@ object DbManager {
 
   def executeRequest(query: String) = {
     val request = s"${dbServiceUrl}execute?query=\"${query}\"";
-    quickRequest.post(uri"$request").send()
+    quickRequest.post(uri"$request").send().body
   }
 }
