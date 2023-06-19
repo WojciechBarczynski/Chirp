@@ -21,24 +21,31 @@ db_driver = GraphDatabase.driver(
     neo4j_url, auth=(neo4j_username, neo4j_password))
 
 
-@app.route('/write', methods=['POST'])
-def write():
+
+@app.route('/execute', methods=['POST'])
+def execute():
     if request.method != 'POST':
         raise "Improper request method"
     query = request.args.get('query')[1:-1]
-    _records, _summary, _keys = db_driver.execute_query(query)
-    return ""
-
-
-@app.route('/read', methods=['GET'])
-def read():
-    if request.method != 'GET':
-        raise "Improper request method"
-    query = request.args.get('query')[1:-1]
     records, _summary, _keys = db_driver.execute_query(query)
-    records = [list(record.data().values()) for record in records]
-    flat_list = [num for sublist in records for num in sublist]
-    return flat_list
+    
+    records_data = []
+    for record in records:        
+        record_properties = list(record.data().values())[0]
+        record_properties["id"] = parse_id(record.value().element_id)
+        records_data.append(record_properties)
+        
+    return records_data
+
+def parse_id(element_id):
+    id = ""
+    for l in element_id[::-1]:
+        if l == ":":
+            return id
+        id = l + id
+    else:
+        raise "Parsing id failed"
 
 if __name__ == '__main__':
     app.run(debug=True)
+    

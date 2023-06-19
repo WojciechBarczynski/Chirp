@@ -13,10 +13,16 @@ object Server extends cask.MainRoutes {
   }
 
   @cask.post("/post/create")
-  def createPost(userName: String, postContent: String): Unit = {
+  def createPost(userName: String, postContent: String, tags: String): Unit = {
     val strippedUserName = stripString(userName);
     val strippedPostContent = stripString(postContent);
-    DbManager.createPost(strippedUserName, strippedPostContent);
+    val strippedTags: List[String] = stripString(tags)
+      .split(",")
+      .map(str => str.trim)
+      .map(str => stripString(str))
+      .toList;
+
+    DbManager.createPost(strippedUserName, strippedPostContent, strippedTags);
   }
 
   @cask.post("/post/react")
@@ -25,9 +31,7 @@ object Server extends cask.MainRoutes {
     val strippedPostId = stripString(postId);
     val strippedReactionType = stripString(reactionType);
     parseReaction(strippedReactionType) match
-      case Some(reaction) =>
-        DbManager.reactToPost(strippedUserName, strippedPostId, reaction);
-        cask.Response(s"OK")
+      case Some(reaction) => DbManager.reactToPost(strippedUserName, strippedPostId, reaction);
       case None => cask.Response(s"Unsupported reaction type ${strippedReactionType}", 400)
   }
 
