@@ -1,6 +1,6 @@
 package api
 
-import api.db.DbManager
+import api.db.{DbManager, Posts, Tags, Users}
 import cask.Request
 import objects.parseReaction
 
@@ -9,7 +9,7 @@ object Server extends cask.MainRoutes {
   @cask.post("/login")
   def login(userName: String): Unit = {
     val strippedUserName = stripString(userName);
-    DbManager.logUser(strippedUserName);
+    Users.logUser(strippedUserName);
   }
 
   @cask.post("/post/create")
@@ -22,7 +22,7 @@ object Server extends cask.MainRoutes {
       .map(str => stripString(str))
       .toList;
 
-    DbManager.createPost(strippedUserName, strippedPostContent, strippedTags);
+    Posts.createPost(strippedUserName, strippedPostContent, strippedTags);
   }
 
   @cask.post("/post/react")
@@ -31,8 +31,15 @@ object Server extends cask.MainRoutes {
     val strippedPostId = stripString(postId);
     val strippedReactionType = stripString(reactionType);
     parseReaction(strippedReactionType) match
-      case Some(reaction) => DbManager.reactToPost(strippedUserName, strippedPostId, reaction);
+      case Some(reaction) => Posts.reactToPost(strippedUserName, strippedPostId, reaction);
       case None => cask.Response(s"Unsupported reaction type ${strippedReactionType}", 400)
+  }
+
+  @cask.post("/tag/subscribe")
+  def subscribe(userName: String, tagName: String): Unit = {
+    val strippedUserName = stripString(userName);
+    val strippedTagName = stripString(tagName);
+    Tags.subscribeTag(strippedUserName, strippedTagName);
   }
 
   initialize()
