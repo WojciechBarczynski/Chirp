@@ -27,6 +27,7 @@ def execute():
     if request.method != 'POST':
         raise "Improper request method"
     query = request.args.get('query')[1:-1]
+    print(f"query: {query}")
     records, _summary, _keys = db_driver.execute_query(query)
     
     records_data = []

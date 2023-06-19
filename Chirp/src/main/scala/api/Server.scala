@@ -1,6 +1,6 @@
 package api
 
-import api.db.{DbManager, Posts, Tags, Users}
+import api.db.{DbManager, Posts, RecommendationEngine, Tags, Users}
 import cask.Request
 import objects.parseReaction
 
@@ -32,7 +32,7 @@ object Server extends cask.MainRoutes {
     val strippedReactionType = stripString(reactionType);
     parseReaction(strippedReactionType) match
       case Some(reaction) => Posts.reactToPost(strippedUserName, strippedPostId, reaction);
-      case None => cask.Response(s"Unsupported reaction type ${strippedReactionType}", 400)
+      case None => throw RuntimeException(s"Unrecognised reaction ${reactionType}!")
   }
 
   @cask.post("/tag/subscribe")
@@ -43,13 +43,17 @@ object Server extends cask.MainRoutes {
   }
 
   @cask.post("/users/follow")
-  def followUser(followerUserName: String, followedUserName: String, level: Int): Unit = {
-    Users.followUser(stripString(followerUserName), stripString(followedUserName), level);
+  def followUser(followerUserName: String, followedUserName: String): Unit = {
+    Users.followUser(stripString(followerUserName), stripString(followedUserName));
+  }
+
+  @cask.post("/users/recommendedPosts")
+  def recommendedPosts(userName: String): Unit = {
+    RecommendationEngine.getUserRecommendedPosts(userName);
   }
 
   initialize()
 }
-
 
 private def stripString(string: String): String = {
   string.substring(1, string.length() - 1)

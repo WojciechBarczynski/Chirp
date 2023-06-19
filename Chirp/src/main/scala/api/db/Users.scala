@@ -1,26 +1,29 @@
 package api.db
 
-import api.db
+import api.{stripString, db}
 import objects.nodes.User
+import objects.nodes.parseUsers
 
 object Users {
   def logUser(userName: String): Unit = {
     if readUser(userName).isEmpty then createUser(userName);
   }
 
-  def followUser(followerUserName: String, followedUserName: String, followLevel: Int): Unit = {
+  def followUser(followerUserName: String, followedUserName: String): Unit = {
     val followUserQuery = s"MATCH (follower:USER {name: \"${followerUserName}\"}), " +
       s"(followed:USER {name: \"${followedUserName}\"}) " +
-      s"CREATE (follower)-[r:FOLLOW {level: ${followLevel}}]->(followed);"
+      s"CREATE (follower)-[r:FOLLOW]->(followed);"
     DbManager.executeRequest(followUserQuery);
   }
 
-  private def readUser(userName: String): Option[User] = {
+  def readUser(userName: String): Option[User] = {
     val userMatch = s"MATCH (n:USER {name: \"${userName}\"}) RETURN n;";
     val response = DbManager.executeRequest(userMatch);
 
-    // TODO parse response here
-    return None;
+    parseUsers(response) match
+      case List(user) => Some(user)
+      case List() => None
+      case _else => throw RuntimeException("Failed to read user!")
   }
 
   private def createUser(userName: String) = {
@@ -28,3 +31,4 @@ object Users {
     DbManager.executeRequest(userCreateQuery)
   }
 }
+

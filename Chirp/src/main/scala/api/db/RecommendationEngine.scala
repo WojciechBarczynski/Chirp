@@ -1,0 +1,51 @@
+package api.db
+
+import objects.nodes.{Post, parsePosts}
+
+import scala.collection.mutable
+import scala.collection.mutable.HashMap;
+
+object RecommendationEngine {
+  def getUserRecommendedPosts(userName: String) = {
+    var scores: mutable.HashMap[Post, Double] = new mutable.HashMap();
+    val allPosts = Posts.getAllPosts();
+
+    allPosts.foreach(post => scores.put(post, 0.0));
+
+    addFollowedUsersScore(scores, userName);
+    addSubscribedTagsScore(scores, userName);
+  }
+
+  private def addFollowedUsersScore(scores: mutable.HashMap[Post, Double], userName: String) = {
+    val followedUsersPostsQuery =
+      s"MATCH (follower:USER {name:\"${userName}\"})-[:FOLLOW]->(followed:USER)-[:CREATED]->(post:POST) RETURN post;";
+
+    val followedPosts = parsePosts(DbManager.executeRequest(followedUsersPostsQuery));
+
+    followedPosts.foreach(
+      post => updateScore(scores, post)
+    );
+  }
+
+  private def addSubscribedTagsScore(scores: mutable.HashMap[Post, Double], userName: String) = {
+    val subscribedTagsPosts =
+      s"MATCH (user:USER {name: \"${userName}\"})-[:SUBSCRIBE]->(tag:TAG)<-[:TAGGED]-(post:POST) RETURN post;"
+
+    val posts = parsePosts(DbManager.executeRequest(subscribedTagsPosts));
+
+    posts.foreach(post => updateScore(scores, post));
+  }
+  
+//  private def addReactionsScore(scores: mutable.HashMap[Post, Double]) = {
+//    val postReactions: mutable.HashMap[Post, Int] = new mutable.HashMap();
+//    
+//    scores.keys.foreach(post => )
+//  }
+  
+  private def updateScore(scores: mutable.HashMap[Post, Double], post: Post): Unit = {
+    val score = scores.get(post);
+    score match
+      case Some(value) => scores.put(post, value + 1);
+      case None => throw RuntimeException("Post not found!");
+  }
+}
