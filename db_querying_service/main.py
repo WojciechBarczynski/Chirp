@@ -29,14 +29,14 @@ def execute():
     query = request.args.get('query')[1:-1]
     print(f"query: {query}")
     records, _summary, _keys = db_driver.execute_query(query)
-    
+
     records_data = []
-    for record in records:        
+    for record in records:
         node = record.items()[0][1]
         record_properties = node._properties
         record_properties["id"] = parse_id(node._element_id)
         records_data.append(record_properties)
-        
+
     return records_data
 
 def parse_id(element_id):
@@ -50,4 +50,3 @@ def parse_id(element_id):
 
 if __name__ == '__main__':
     app.run(debug=True)
-    

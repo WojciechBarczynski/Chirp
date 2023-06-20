@@ -82,15 +82,21 @@ object Posts {
   }
 
   def getPostSharesCount(postId: String): Int = {
-    val getSharesCountQuery = s"MATCH (user:USER)-[:SHARED]->(post:POST) WHERE ID(post)=${postId} RETURN post;"
-    parsePosts(DbManager.executeRequest(getSharesCountQuery)).length
+//    TODO add 'COUNT' querying endpoint to python script
+//    val getSharesCountQuery = s"MATCH (user:USER)-[:SHARED]->(post:POST) WHERE ID(post)=${postId} RETURN COUNT(post);"
+//    DbManager.executeRequest(getSharesCountQuery).toInt
+      val getSharesCountQuery = s"MATCH (user:USER)-[:SHARED]->(post:POST) WHERE ID(post)=${postId} RETURN post;"
+      parsePosts(DbManager.executeRequest(getSharesCountQuery)).length
   }
 
-  def getPostComments(postId: String): List[Post] = {
-    val getCommentCountQuery = s"MATCH (comment:POST)-[:COMMENTED]->(post:POST) WHERE ID(post)=${postId} RETURN comment;"
-    parsePosts(DbManager.executeRequest(getCommentCountQuery))
+  def getPostComments(postId: String): List[PostInfo] = {
+    val getPostCommentSQuery = s"MATCH (comment:POST)-[:COMMENTED]->(post:POST) WHERE ID(post)=${postId} RETURN comment;"
+    parsePosts(DbManager.executeRequest(getPostCommentSQuery)).map(post => postInfo(post))
   }
   def getPostCommentCount(postId: String): Int = {
+//    TODO add 'COUNT' querying endpoint to python script
+//    val getCommentCountQuery = s"MATCH (comment:POST)-[:COMMENTED]->(post:POST) WHERE ID(post)=${postId} RETURN COUNT(comment);"
+//    println(DbManager.executeRequest(getCommentCountQuery))
     getPostComments(postId).length
   }
 }
