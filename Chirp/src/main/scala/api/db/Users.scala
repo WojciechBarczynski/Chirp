@@ -35,5 +35,19 @@ object Users {
     val userCreateQuery = s"CREATE (user:USER {name: \"${userName}\", bio: \"Empty bio\"});"
     DbManager.executeRequest(userCreateQuery)
   }
+
+  def getAllUsers: List[User] = {
+    val getAllUsersQuery = s"MATCH (user:USER) RETURN user;";
+    parseUsers(DbManager.executeRequest(getAllUsersQuery))
+  }
+
+  def getContentUsers(userContent: String): List[User] = {
+    getAllUsers.filter(user => user.name.toLowerCase.contains(userContent.toLowerCase))
+  }
+
+  def getFollowedUsers(userName: String): List[User] = {
+    val getFollowedUsersQuery = s"MATCH (user:USER {name: \"${userName}\"})-[:FOLLOW]->(followed_user:USER) RETURN followed_user;"
+    parseUsers(DbManager.executeRequest(getFollowedUsersQuery))
+  }
 }
 

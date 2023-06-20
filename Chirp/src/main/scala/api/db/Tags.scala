@@ -38,4 +38,18 @@ object Tags {
       case List() => None
       case _other => throw RuntimeException("Failed to read tag!")
   }
+
+  def getAllTags: List[Tag] = {
+    val getAllTagsQuery = s"MATCH (tag:TAG) RETURN tag;";
+    parseTags(DbManager.executeRequest(getAllTagsQuery))
+  }
+
+  def getContentTags(tagContent: String): List[Tag] = {
+    getAllTags.filter(tag => tag.name.toLowerCase.contains(tagContent.toLowerCase))
+  }
+
+  def getSubscribedTags(userName: String): List[Tag] = {
+    val getSubscribedTagsQuery = s"MATCH (user:USER {name: \"${userName}\"})-[:SUBSCRIBED]->(tag:TAG) RETURN tag;"
+    parseTags(DbManager.executeRequest(getSubscribedTagsQuery))
+  }
 }
