@@ -60,6 +60,11 @@ object Server extends cask.MainRoutes {
     // TODO add return cask.response here
   }
 
+  @cask.post("/users/updateBio")
+  def updateBio(userName: String, bio: String): Unit = {
+    Users.updateBio(stripString(userName), stripString(bio));
+  }
+
   initialize()
 }
 

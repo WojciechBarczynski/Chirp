@@ -6,7 +6,7 @@ import objects.relations.{ReactedTo, parseReactedTo}
 import objects.{ReactionType, reactionTypeToString}
 
 object Posts {
-  def reactToPost(userName: String, postId: String, reactionType: ReactionType) = {
+  def reactToPost(userName: String, postId: String, reactionType: ReactionType): Unit = {
     val createReactionQuery =
       s"MATCH (post:POST), (user:USER {name: \"${userName}\"}) " +
         s"WHERE ID(post) = ${postId} " +
@@ -14,7 +14,7 @@ object Posts {
     DbManager.executeRequest(createReactionQuery);
   }
 
-  def createPost(userName: String, postContent: String, tags: List[String]) = {
+  def createPost(userName: String, postContent: String, tags: List[String]): Unit = {
     if Users.readUser(userName).isEmpty then throw RuntimeException("Unrecognised user!");
 
     val createPostQuery = s"CREATE (post:POST {content: \"${postContent}\"}) RETURN post;";
