@@ -6,7 +6,7 @@ import objects.relations.{ReactedTo, parseReactedTo}
 import objects.{ReactionType, reactionTypeToString}
 
 object Posts {
-  def reactToPost(userName: String, postId: String, reactionType: ReactionType) = {
+  def reactToPost(userName: String, postId: String, reactionType: ReactionType): Unit = {
     val createReactionQuery =
       s"MATCH (post:POST), (user:USER {name: \"${userName}\"}) " +
         s"WHERE ID(post) = ${postId} " +

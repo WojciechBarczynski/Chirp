@@ -1,6 +1,6 @@
 package api
 
-import api.db.{DbManager, Posts, RecommendationEngine, Tags, Users}
+import api.db.{DbManager, PostInfo, Posts, RecommendationEngine, Tags, Users}
 import cask.Request
 import objects.parseReaction
 
@@ -42,6 +42,12 @@ object Server extends cask.MainRoutes {
     Tags.subscribeTag(strippedUserName, strippedTagName);
   }
 
+  @cask.post("tag/recommended")
+  def recommendedTags(): Unit = {
+    val recommendedTags: List[String] = Tags.getRecommendedTags();
+    // TODO add return cask.response here
+  }
+
   @cask.post("/users/follow")
   def followUser(followerUserName: String, followedUserName: String): Unit = {
     Users.followUser(stripString(followerUserName), stripString(followedUserName));
@@ -49,13 +55,19 @@ object Server extends cask.MainRoutes {
 
   @cask.post("/users/recommendedPosts")
   def recommendedPosts(userName: String): Unit = {
-    val recommendedPosts = RecommendationEngine.getUserRecommendedPosts(stripString(userName));
+    val recommendedPosts: List[PostInfo] = RecommendationEngine.getUserRecommendedPosts(stripString(userName));
     println(recommendedPosts);
+    // TODO add return cask.response here
+  }
+
+  @cask.post("/users/updateBio")
+  def updateBio(userName: String, bio: String): Unit = {
+    Users.updateBio(stripString(userName), stripString(bio));
   }
 
   initialize()
 }
 
 private def stripString(string: String): String = {
-  string.substring(1, string.length() - 1)
+  if string.length < 2 then "" else string.substring(1, string.length() - 1)
 }

@@ -1,12 +1,14 @@
 package api.db
 
-import objects.nodes.{Post, parsePosts}
+import objects.nodes.{Post, Tag, parsePosts, parseTags}
+import api.db.PostInfo
+import api.db.postInfo
 
 import scala.collection.mutable
 import scala.collection.mutable.HashMap;
 
 object RecommendationEngine {
-  def getUserRecommendedPosts(userName: String): List[Post] = {
+  def getUserRecommendedPosts(userName: String): List[PostInfo] = {
     var scores: mutable.HashMap[Post, Double] = new mutable.HashMap();
     val allPosts = Posts.getAllPosts;
 
@@ -21,6 +23,12 @@ object RecommendationEngine {
       .sortBy(_._2)
       .map((post, score) => post)
       .toList
+      .map(post => postInfo(post))
+  }
+
+  def getRecommendedTags(): List[Tag] = {
+    val recommendedTagsQuery = "MATCH (post:POST)-[r:TAGGED]->(tag:TAG) RETURN tag, count(r) ORDER BY count(r) DESC LIMIT 10;";
+    parseTags(DbManager.executeRequest(recommendedTagsQuery))
   }
 
   private def addFollowedUsersScore(scores: mutable.HashMap[Post, Double], userName: String): Unit = {

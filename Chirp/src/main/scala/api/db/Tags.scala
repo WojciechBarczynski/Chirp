@@ -25,6 +25,10 @@ object Tags {
     executeRequest(tagPostQuery);
   }
 
+  def getRecommendedTags(): List[String] = {
+    RecommendationEngine.getRecommendedTags().map(tag => tag.name)
+  }
+
   private def readTag(tagName: String): Option[Tag] = {
     val tagMatch = s"MATCH (n:TAG {name: \"${tagName}\"}) RETURN n;";
     val response = executeRequest(tagMatch);

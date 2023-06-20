@@ -26,6 +26,11 @@ object Users {
       case _else => throw RuntimeException("Failed to read user!")
   }
 
+  def updateBio(userName: String, bio: String) = {
+    val userUpdateBioQuery = s"MATCH (user:USER {name: \"${userName}\"}) SET user.bio = \"${bio}\" RETURN user;"
+    DbManager.executeRequest(userUpdateBioQuery);
+  }
+
   private def createUser(userName: String) = {
     val userCreateQuery = s"CREATE (user:USER {name: \"${userName}\", bio: \"Empty bio\"});"
     DbManager.executeRequest(userCreateQuery)
