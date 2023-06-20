@@ -1,6 +1,6 @@
 package api
 
-import api.db.{DbManager, PostInfo, Posts, RecommendationEngine, Tags, Users}
+import api.db.{DbManager, PostInfo, Posts, RecommendationEngine, Tags, Users, postInfosToJsonString}
 import cask.Request
 import objects.parseReaction
 
@@ -42,10 +42,10 @@ object Server extends cask.MainRoutes {
     Tags.subscribeTag(strippedUserName, strippedTagName);
   }
 
-  @cask.post("tag/recommended")
-  def recommendedTags(): Unit = {
-    val recommendedTags: List[String] = Tags.getRecommendedTags();
-    // TODO add return cask.response here
+  @cask.get("tag/recommended")
+  def recommendedTags(): String = {
+    val recommendedTags: List[String] = Tags.getRecommendedTags;
+    Tags.tagsToJsonString(recommendedTags)
   }
 
   @cask.post("/users/follow")
@@ -53,11 +53,10 @@ object Server extends cask.MainRoutes {
     Users.followUser(stripString(followerUserName), stripString(followedUserName));
   }
 
-  @cask.post("/users/recommendedPosts")
-  def recommendedPosts(userName: String): Unit = {
-    val recommendedPosts: List[PostInfo] = RecommendationEngine.getUserRecommendedPosts(stripString(userName));
-    println(recommendedPosts);
-    // TODO add return cask.response here
+  @cask.get("/users/recommendedPosts")
+  def recommendedPosts(userName: String): String = {
+    val recommendedPosts: List[PostInfo] = RecommendationEngine.getUserRecommendedPosts(stripString(userName))
+    postInfosToJsonString(recommendedPosts)
   }
 
   @cask.post("/users/updateBio")
