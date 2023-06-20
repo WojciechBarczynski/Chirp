@@ -1,6 +1,6 @@
 package api
 
-import api.db.{DbManager, Posts, RecommendationEngine, Tags, Users}
+import api.db.{DbManager, PostInfo, Posts, RecommendationEngine, Tags, Users}
 import cask.Request
 import objects.parseReaction
 
@@ -49,7 +49,7 @@ object Server extends cask.MainRoutes {
 
   @cask.post("/users/recommendedPosts")
   def recommendedPosts(userName: String): Unit = {
-    val recommendedPosts = RecommendationEngine.getUserRecommendedPosts(stripString(userName));
+    val recommendedPosts: List[PostInfo] = RecommendationEngine.getUserRecommendedPosts(stripString(userName));
     println(recommendedPosts);
   }
 
