@@ -1,7 +1,7 @@
 package objects.nodes
 
-import io.circe.{Decoder, parser}
-
+import io.circe._
+import io.circe.syntax._
 
 case class Tag(id: String, name: String)
 

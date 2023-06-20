@@ -24,11 +24,9 @@ object Posts {
       case List(post) => post;
       case _else => throw Exception("Failed to created post!");
 
-//    val timestamp: Long = System.currentTimeMillis / 1000
     val createdQuery = s"MATCH (post:POST), (user:USER {name: \"${userName}\"}) " +
       s"WHERE ID(post)=${createdPost.id} " +
       s"CREATE (user)-[r:CREATED]->(post);"
-//      s"CREATE (user)-[r:CREATED {datetime: datetime({epochSeconds: ${timestamp})})}]->(post);"
     DbManager.executeRequest(createdQuery)
 
     tags.foreach(tagName =>
@@ -38,7 +36,7 @@ object Posts {
     createdPost.id
   }
 
-  def commentPost(userName: String, commentContent: String, tags: List[String], postId: String) = {
+  def commentPost(userName: String, commentContent: String, tags: List[String], postId: String): Unit = {
     val commentId: String = createPost(userName, commentContent, tags)
 
     val commentedQuery = s"MATCH (post:POST), (comment:POST) " +
@@ -47,12 +45,10 @@ object Posts {
     DbManager.executeRequest(commentedQuery)
   }
 
-  def sharePost(userName: String, postId: String) = {
-//    val timestamp: Long = System.currentTimeMillis / 1000
+  def sharePost(userName: String, postId: String): Unit = {
     val sharedQuery = s"MATCH (post:POST), (user:USER {name: \"${userName}\"}) " +
       s"WHERE ID(post)=${postId} " +
       s"CREATE (user)-[r:SHARED]->(post);"
-    //      s"CREATE (user)-[r:SHARED {datetime: datetime({epochSeconds: ${timestamp})})}]->(post);"
     DbManager.executeRequest(sharedQuery)
   }
 
@@ -85,8 +81,13 @@ object Posts {
     parsePosts(DbManager.executeRequest(getSharedPostsQuery))
   }
 
-  def getPostSharesQuantity(postId: String): Int = {
-    val getSharesQuery = s"MATCH (user:USER)-[:SHARED]->(post:POST) WHERE ID(post)=${postId} RETURN post;"
-    parsePosts(DbManager.executeRequest(getSharesQuery)).length
+  def getPostSharesCount(postId: String): Int = {
+    val getSharesCountQuery = s"MATCH (user:USER)-[:SHARED]->(post:POST) WHERE ID(post)=${postId} RETURN post;"
+    parsePosts(DbManager.executeRequest(getSharesCountQuery)).length
+  }
+
+  def getPostCommentCount(postId: String): Int = {
+    val getCommentCountQuery = s"MATCH (comment:POST)-[:COMMENTED]->(post:POST) WHERE ID(post)=${postId} RETURN comment;"
+    parsePosts(DbManager.executeRequest(getCommentCountQuery)).length
   }
 }
