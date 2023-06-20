@@ -129,7 +129,7 @@ const AddPostPage = () => {
           />
         </div>
         <div className="form-buttons">
-          <Link to="/">
+          <Link to="/home">
             <button type="button" onClick={handleCancel}>Cancel</button>
           </Link>
           <button type="submit">Submit</button>
