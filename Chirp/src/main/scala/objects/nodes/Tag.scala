@@ -16,3 +16,7 @@ def parseTags(tagsJsonString: String): List[Tag] = {
       List[Tag]()
   }
 }
+
+def tagsToJsonString(tags: List[String]): String = {
+  tags.asJson.spaces2
+}

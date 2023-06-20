@@ -1,7 +1,5 @@
 package api.db
 
-import io.circe._
-import io.circe.syntax._
 import api.db.DbManager.executeRequest
 import objects.nodes.Tag
 import objects.nodes.parseTags
@@ -70,9 +68,5 @@ object Tags {
   def getSubscribedTags(userName: String): List[Tag] = {
     val getSubscribedTagsQuery = s"MATCH (user:USER {name: \"${userName}\"})-[:SUBSCRIBED]->(tag:TAG) RETURN tag;"
     parseTags(DbManager.executeRequest(getSubscribedTagsQuery))
-  }
-
-  def tagsToJsonString(tags: List[String]): String = {
-    tags.asJson.spaces2
   }
 }
