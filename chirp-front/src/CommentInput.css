@@ -1,0 +1,48 @@
+.comment-input {
+    margin-bottom: 20px;
+  }
+  
+  .comment-input textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    resize: vertical;
+  }
+  
+  .comment-input .button-group {
+    margin-top: 10px;
+  }
+  
+  .comment-input button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 8px 16px;
+    cursor: pointer;
+    margin-right: 10px;
+  }
+  
+  .comment-input button:hover {
+    background-color: #0056b3;
+  }
+  
+  .comment-input button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
+  
+  .comment-input button:disabled:hover {
+    background-color: #ccc;
+  }
+  
+  /* Additional styles for the buttons */
+  .comment-input button.reset-button {
+    background-color: #dc3545;
+  }
+  
+  .comment-input button.reset-button:hover {
+    background-color: #c82333;
+  }
+  

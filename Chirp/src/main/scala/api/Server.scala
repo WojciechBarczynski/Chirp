@@ -69,5 +69,5 @@ object Server extends cask.MainRoutes {
 }
 
 private def stripString(string: String): String = {
-  string.substring(1, string.length() - 1)
+  if string.length < 2 then "" else string.substring(1, string.length() - 1)
 }
