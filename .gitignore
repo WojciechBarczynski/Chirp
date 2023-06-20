@@ -44,3 +44,5 @@ bin/
 
 # configs
 db_querying_service/db_config.toml
+
+node_modules/
