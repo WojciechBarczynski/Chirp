@@ -86,8 +86,11 @@ object Posts {
     parsePosts(DbManager.executeRequest(getSharesCountQuery)).length
   }
 
-  def getPostCommentCount(postId: String): Int = {
+  def getPostComments(postId: String): List[Post] = {
     val getCommentCountQuery = s"MATCH (comment:POST)-[:COMMENTED]->(post:POST) WHERE ID(post)=${postId} RETURN comment;"
-    parsePosts(DbManager.executeRequest(getCommentCountQuery)).length
+    parsePosts(DbManager.executeRequest(getCommentCountQuery))
+  }
+  def getPostCommentCount(postId: String): Int = {
+    getPostComments(postId).length
   }
 }

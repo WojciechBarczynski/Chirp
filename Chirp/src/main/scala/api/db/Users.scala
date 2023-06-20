@@ -1,6 +1,5 @@
 package api.db
 
-import api.{stripString, db}
 import objects.nodes.User
 import objects.nodes.parseUsers
 
@@ -10,12 +9,22 @@ object Users {
   }
 
   def followUser(followerUserName: String, followedUserName: String): Unit = {
-    val followUserQuery = s"MATCH (follower:USER {name: \"${followerUserName}\"}), " +
-      s"(followed:USER {name: \"${followedUserName}\"}) " +
-      s"CREATE (follower)-[r:FOLLOW]->(followed);"
-    DbManager.executeRequest(followUserQuery);
+    if (!isFollowed(followerUserName, followedUserName)) then
+      val followUserQuery = s"MATCH (follower:USER {name: \"${followerUserName}\"}), " +
+        s"(followed:USER {name: \"${followedUserName}\"}) " +
+        s"CREATE (follower)-[r:FOLLOW]->(followed);"
+      DbManager.executeRequest(followUserQuery)
   }
 
+  private def isFollowed(followerUserName: String, followedUserName: String): Boolean = {
+    val followUserQuery = s"MATCH (follower:USER {name: \"${followerUserName}\"})" +
+      s"-[r:FOLLOW]->(followed:USER {name: \"${followedUserName}\"}) " +
+      s"RETURN r;"
+    if (DbManager.executeRequest(followUserQuery) == "[]\n") then
+      false
+    else
+      true
+  }
   def unfollowUser(followerUserName: String, followedUserName: String): Unit = {
     val unfollowUserQuery = s"MATCH (follower:USER {name: \"${followerUserName}\"})" +
       s"-[r:FOLLOW]-(followed:USER {name: \"${followedUserName}\"}) " +
@@ -55,6 +64,15 @@ object Users {
   def getFollowedUsers(userName: String): List[User] = {
     val getFollowedUsersQuery = s"MATCH (user:USER {name: \"${userName}\"})-[:FOLLOW]->(followed_user:USER) RETURN followed_user;"
     parseUsers(DbManager.executeRequest(getFollowedUsersQuery))
+  }
+
+  def getFollowersUsers(userName: String): List[User] = {
+    val getFollowersUsersQuery = s"MATCH (followers_user:USER)-[:FOLLOW]->(user:USER {name: \"${userName}\"}) RETURN followers_user;"
+    parseUsers(DbManager.executeRequest(getFollowersUsersQuery))
+  }
+
+  def getFollowersCount(userName: String): Int = {
+    getFollowersUsers(userName).length
   }
 }
 
