@@ -2,6 +2,7 @@ import React from 'react';
 import './MainPage.css';
 import Header from './Header';
 import Post from './Post';
+import DashboardPage from './DashboardPage';
 
 const TagsSection = () => {
   return (
@@ -103,6 +104,7 @@ const MainPage = () => {
   return (
     <div className="main-page">
       <Header />
+      <DashboardPage />
       <div className="main-content">
         <TagsSection />
         <ContentSection posts={samplePosts} />

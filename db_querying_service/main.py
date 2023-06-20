@@ -1,7 +1,7 @@
 import tomli
 
-from flask import Flask, request, jsonify
-from flask_cors import CORS, cross_origin
+from flask import Flask, request
+from flask_cors import CORS
 
 from neo4j import GraphDatabase
 
