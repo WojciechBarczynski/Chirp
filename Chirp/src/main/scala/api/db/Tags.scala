@@ -24,9 +24,16 @@ object Tags {
   }
 
   def subscribeTag(userName: String, tagName: String): Unit = {
-    val subscribeQuery = s"MATCH (user:USER {name: \"${userName}\"}), (tag:TAG {name: \"${tagName}\"}) " +
+    val subscribeTagQuery = s"MATCH (user:USER {name: \"${userName}\"}), (tag:TAG {name: \"${tagName}\"}) " +
       s"CREATE (user)-[r:SUBSCRIBE]->(tag);"
-    DbManager.executeRequest(subscribeQuery)
+    DbManager.executeRequest(subscribeTagQuery)
+  }
+
+  def unsubscribeTag(userName: String, tagName: String): Unit = {
+    val unsubscribeTagQuery = s"MATCH (user:USER {name: \"${userName}\"})" +
+      s"-[r:SUBSCRIBE]-(tag:TAG {name: \"${tagName}\"}) " +
+      s"DELETE r"
+    DbManager.executeRequest(unsubscribeTagQuery)
   }
 
   def tagPost(postId: String, tagName: String): Unit = {
