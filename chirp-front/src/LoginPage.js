@@ -1,7 +1,47 @@
+// import React, { useState } from 'react';
+// import './LoginPage.css';
+
+// const LoginPage = () => {
+//   const [username, setUsername] = useState('');
+
+//   const handleUsernameChange = (event) => {
+//     setUsername(event.target.value);
+//   };
+
+
+//   const handleSubmit = (event) => {
+//     event.preventDefault();
+//     // Add your login logic here
+//     console.log('Username:', username);
+//   };
+
+//   return (
+//     <div className="login-container">
+//       <h2 className="login-title">Login</h2>
+//       <form className="login-form" onSubmit={handleSubmit}>
+//         <div className="form-group">
+//           <label className="form-label">Username:</label>
+//           <input
+//             className="form-input"
+//             type="text"
+//             value={username}
+//             onChange={handleUsernameChange}
+//           />
+//         </div>
+//         <div className="form-group">
+//           <button className="login-button" type="submit">Login</button>
+//         </div>
+//       </form>
+//     </div>
+//   );
+// };
+
+// export default LoginPage;
+
+// LoginPage.js
 import React, { useContext, useState } from 'react';
 import MyContext from './MyContext';
 import { useNavigate } from 'react-router-dom';
-import './LoginPage.css'; // Import the CSS file
 
 const LoginPage = () => {
   const [inputLogin, setInputLogin] = useState('');
@@ -12,56 +52,29 @@ const LoginPage = () => {
     setInputLogin(event.target.value);
   };
 
-  const handleFormSubmit = async (event) => {
+  const handleFormSubmit = (event) => {
     event.preventDefault();
-  
-    const newUser = {
-      userName: inputLogin,
-    };
-  
-    try {
-      const response = await fetch('http://127.0.0.1:8080/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(newUser),
-      });
-  
-      if (response.ok) {
-        const data = await response.json();
-        console.log(data); // Assuming the server responds with the created user data
-        updateLogin(inputLogin);
-        navigate('/home');
-      } else {
-        throw new Error('Failed to create a new user');
-      }
-    } catch (error) {
-      console.error(error);
-      // Handle the error appropriately (e.g., show an error message)
-    }
+    updateLogin(inputLogin);
+    navigate('/home');
   };
-  
 
   return (
-    <div className="login-page">
-      <div className="login-box">
-        <h1>Login Page</h1>
-        <form onSubmit={handleFormSubmit}>
-          <div className="form-group">
-            <label className="form-label">Username</label>
-            <input
-              type="text"
-              value={inputLogin}
-              onChange={handleInputChange}
-              className="form-input"
-            />
-          </div>
-          <button type="submit" className="submit-button">Submit</button>
-        </form>
-      </div>
+    <div>
+      <h1>Login Page</h1>
+      <form onSubmit={handleFormSubmit}>
+        <input
+          type="text"
+          value={inputLogin}
+          onChange={handleInputChange}
+        />
+        <button type="submit">Submit</button>
+      </form>
     </div>
   );
 };
 
 export default LoginPage;
+
+
+
+

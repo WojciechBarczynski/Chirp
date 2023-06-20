@@ -48,9 +48,6 @@ def parse_id(element_id):
     else:
         raise "Parsing id failed"
 
-
-
-
-
 if __name__ == '__main__':
     app.run(debug=True)
+    
