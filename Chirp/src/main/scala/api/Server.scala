@@ -9,21 +9,41 @@ import objects.parseReaction
 object Server extends cask.MainRoutes {
   @cask.post("/login")
   def login(userName: String): Unit = {
-    val strippedUserName = stripString(userName);
-    Users.logUser(strippedUserName);
+    val strippedUserName = stripString(userName)
+    Users.logUser(strippedUserName)
   }
 
   @cask.post("/post/create")
   def createPost(userName: String, postContent: String, tags: String): Unit = {
-    val strippedUserName = stripString(userName);
-    val strippedPostContent = stripString(postContent);
+    val strippedUserName = stripString(userName)
+    val strippedPostContent = stripString(postContent)
     val strippedTags: List[String] = stripString(tags)
       .split(",")
       .map(str => str.trim)
       .map(str => stripString(str))
-      .toList;
+      .toList
 
-    Posts.createPost(strippedUserName, strippedPostContent, strippedTags);
+    Posts.createPost(strippedUserName, strippedPostContent, strippedTags)
+  }
+
+  @cask.post("/post/comment")
+  def createComment(userName: String, commentContent: String, tags: String, postId: String): Unit = {
+    val strippedUserName = stripString(userName)
+    val strippedCommentContent = stripString(commentContent)
+    val strippedTags: List[String] = stripString(tags)
+      .split(",")
+      .map(str => str.trim)
+      .map(str => stripString(str))
+      .toList
+    val strippedPostId = stripString(postId)
+
+    Posts.commentPost(strippedUserName, strippedCommentContent, strippedTags, strippedPostId)
+  }
+
+  @cask.get("/post/comments")
+  def getComments(postId: String): String = {
+    val postComments: List[PostInfo] = Posts.getPostComments(stripString(postId))
+    postInfosToJsonString(postComments)
   }
 
   @cask.post("/post/react")
@@ -38,9 +58,9 @@ object Server extends cask.MainRoutes {
 
   @cask.post("/tag/subscribe")
   def subscribe(userName: String, tagName: String): Unit = {
-    val strippedUserName = stripString(userName);
-    val strippedTagName = stripString(tagName);
-    Tags.subscribeTag(strippedUserName, strippedTagName);
+    val strippedUserName = stripString(userName)
+    val strippedTagName = stripString(tagName)
+    Tags.subscribeTag(strippedUserName, strippedTagName)
   }
 
   @cask.get("tag/recommended")
@@ -51,7 +71,7 @@ object Server extends cask.MainRoutes {
 
   @cask.post("/users/follow")
   def followUser(followerUserName: String, followedUserName: String): Unit = {
-    Users.followUser(stripString(followerUserName), stripString(followedUserName));
+    Users.followUser(stripString(followerUserName), stripString(followedUserName))
   }
 
   @cask.get("/users/recommendedPosts")
