@@ -16,6 +16,13 @@ object Users {
     DbManager.executeRequest(followUserQuery);
   }
 
+  def unfollowUser(followerUserName: String, followedUserName: String): Unit = {
+    val unfollowUserQuery = s"MATCH (follower:USER {name: \"${followerUserName}\"})" +
+      s"-[r:FOLLOW]-(followed:USER {name: \"${followedUserName}\"}) " +
+      s"DELETE r"
+    DbManager.executeRequest(unfollowUserQuery)
+  }
+
   def readUser(userName: String): Option[User] = {
     val userMatch = s"MATCH (n:USER {name: \"${userName}\"}) RETURN n;";
     val response = DbManager.executeRequest(userMatch);
