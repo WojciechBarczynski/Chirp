@@ -42,6 +42,12 @@ object Server extends cask.MainRoutes {
     Tags.subscribeTag(strippedUserName, strippedTagName);
   }
 
+  @cask.post("tag/recommended")
+  def recommendedTags(): Unit = {
+    val recommendedTags: List[String] = Tags.getRecommendedTags();
+    // TODO add return cask.response here
+  }
+
   @cask.post("/users/follow")
   def followUser(followerUserName: String, followedUserName: String): Unit = {
     Users.followUser(stripString(followerUserName), stripString(followedUserName));
@@ -51,6 +57,7 @@ object Server extends cask.MainRoutes {
   def recommendedPosts(userName: String): Unit = {
     val recommendedPosts: List[PostInfo] = RecommendationEngine.getUserRecommendedPosts(stripString(userName));
     println(recommendedPosts);
+    // TODO add return cask.response here
   }
 
   initialize()
