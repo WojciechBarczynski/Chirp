@@ -39,6 +39,15 @@ def execute():
 
     return records_data
 
+@app.route('/count', methods=['GET'])
+def count():
+    if request.method != 'GET':
+        raise "Improper request method"
+    query = request.args.get('query')[1:-1]
+    print(f"query: {query}")
+    records, _summary, _keys = db_driver.execute_query(query)
+    return str(records[0].items()[0][1])
+
 def parse_id(element_id):
     id = ""
     for l in element_id[::-1]:

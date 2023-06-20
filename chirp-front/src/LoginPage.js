@@ -14,11 +14,11 @@ const LoginPage = () => {
 
   const handleFormSubmit = async (event) => {
     event.preventDefault();
-  
+
     const newUser = {
-      userName: inputLogin,
+      userName: `"${inputLogin}"`,
     };
-  
+
     try {
       const response = await fetch('http://127.0.0.1:8080/login', {
         method: 'POST',
@@ -27,7 +27,7 @@ const LoginPage = () => {
         },
         body: JSON.stringify(newUser),
       });
-  
+
       if (response.ok) {
         const data = await response.json();
         console.log(data); // Assuming the server responds with the created user data
@@ -41,7 +41,7 @@ const LoginPage = () => {
       // Handle the error appropriately (e.g., show an error message)
     }
   };
-  
+
 
   return (
     <div className="login-page">

@@ -16,4 +16,9 @@ object DbManager {
     val request = s"${dbServiceUrl}execute?query=\"${query}\"";
     quickRequest.post(uri"$request").send().body
   }
+
+  def executeCountRequest(query: String) = {
+    val request = s"${dbServiceUrl}count?query=\"${query}\"";
+    quickRequest.get(uri"$request").send().body
+  }
 }

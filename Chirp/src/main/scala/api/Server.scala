@@ -8,7 +8,7 @@ import objects.parseReaction
 
 object Server extends cask.MainRoutes {
   @cask.post("/login")
-  def login(userName: String): Unit = {
+  def login(userName: String) = {
     val strippedUserName = stripString(userName)
     Users.logUser(strippedUserName)
   }
@@ -54,6 +54,13 @@ object Server extends cask.MainRoutes {
     parseReaction(strippedReactionType) match
       case Some(reaction) => Posts.reactToPost(strippedUserName, strippedPostId, reaction);
       case None => throw RuntimeException(s"Unrecognised reaction ${reactionType}!")
+  }
+
+  @cask.post("/post/share")
+  def share(userName: String, postId: String): Unit = {
+    val strippedUserName = stripString(userName);
+    val strippedPostId = stripString(postId);
+    Posts.sharePost(strippedUserName, strippedPostId)
   }
 
   @cask.post("/tag/subscribe")
