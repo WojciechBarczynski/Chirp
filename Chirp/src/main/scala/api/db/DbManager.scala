@@ -12,13 +12,13 @@ import javax.management.Query
 object DbManager {
   private val dbServiceUrl = "http://127.0.0.1:5000/"
 
-  def executeRequest(query: String) = {
-    val request = s"${dbServiceUrl}execute?query=\"${query}\"";
+  def executeRequest(query: String): String = {
+    val request = s"${dbServiceUrl}execute?query=\"${query}\""
     quickRequest.post(uri"$request").send().body
   }
 
-  def executeCountRequest(query: String) = {
-    val request = s"${dbServiceUrl}count?query=\"${query}\"";
+  def executeCountRequest(query: String): String = {
+    val request = s"${dbServiceUrl}count?query=\"${query}\""
     quickRequest.get(uri"$request").send().body
   }
 }

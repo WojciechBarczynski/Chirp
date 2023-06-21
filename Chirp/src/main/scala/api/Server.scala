@@ -1,14 +1,14 @@
 package api
 
-import api.db.{DbManager, PostInfo, Posts, RecommendationEngine, Tags, Users, postInfosToJsonString}
+import api.db.{DbManager, PostInfo, Posts, RecommendationEngine, Tags, Users, postInfo, postInfosToJsonString}
 import cask.Request
-import objects.nodes.{User, usersToJsonString, tagsToJsonString}
+import objects.nodes.{User, tagsToJsonString, usersToJsonString}
 import objects.parseReaction
 
 
 object Server extends cask.MainRoutes {
   @cask.post("/login")
-  def login(userName: String) = {
+  def login(userName: String): Unit = {
     val strippedUserName = stripString(userName)
     Users.logUser(strippedUserName)
   }
@@ -48,9 +48,9 @@ object Server extends cask.MainRoutes {
 
   @cask.post("/post/react")
   def react(userName: String, postId: String, reactionType: String): Unit = {
-    val strippedUserName = stripString(userName);
-    val strippedPostId = stripString(postId);
-    val strippedReactionType = stripString(reactionType);
+    val strippedUserName = stripString(userName)
+    val strippedPostId = stripString(postId)
+    val strippedReactionType = stripString(reactionType)
     parseReaction(strippedReactionType) match
       case Some(reaction) => Posts.reactToPost(strippedUserName, strippedPostId, reaction);
       case None => throw RuntimeException(s"Unrecognised reaction ${reactionType}!")
@@ -58,8 +58,8 @@ object Server extends cask.MainRoutes {
 
   @cask.post("/post/share")
   def share(userName: String, postId: String): Unit = {
-    val strippedUserName = stripString(userName);
-    val strippedPostId = stripString(postId);
+    val strippedUserName = stripString(userName)
+    val strippedPostId = stripString(postId)
     Posts.sharePost(strippedUserName, strippedPostId)
   }
 
@@ -72,7 +72,7 @@ object Server extends cask.MainRoutes {
 
   @cask.get("tag/recommended")
   def recommendedTags(): String = {
-    val recommendedTags: List[String] = Tags.getRecommendedTags;
+    val recommendedTags: List[String] = Tags.getRecommendedTags
     tagsToJsonString(recommendedTags)
   }
 

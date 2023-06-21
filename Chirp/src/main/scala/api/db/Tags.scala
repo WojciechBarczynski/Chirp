@@ -43,7 +43,7 @@ object Tags {
   }
 
   def getRecommendedTags: List[String] = {
-    RecommendationEngine.getRecommendedTags().map(tag => tag.name)
+    RecommendationEngine.getRecommendedTags.map(tag => tag.name)
   }
 
   private def readTag(tagName: String): Option[Tag] = {
