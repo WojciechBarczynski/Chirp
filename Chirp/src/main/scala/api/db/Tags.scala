@@ -62,7 +62,8 @@ object Tags {
   }
 
   def getContentTags(tagContent: String): List[Tag] = {
-    getAllTags.filter(tag => tag.name.toLowerCase.contains(tagContent.toLowerCase))
+    val tagContentQuery = s"MATCH (tag:TAG) WHERE toLower(tag.name) CONTAINS \"${tagContent.toLowerCase}\" RETURN tag"
+    parseTags(DbManager.executeRequest(tagContentQuery))
   }
 
   def getSubscribedTags(userName: String): List[Tag] = {

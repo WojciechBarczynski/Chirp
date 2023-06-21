@@ -104,6 +104,22 @@ object Server extends cask.MainRoutes {
     usersToJsonString(followersUsers)
   }
 
+  @cask.get("/users/commonFollowed")
+  def commonFollowed(userName1: String, userName2: String): String = {
+    val strippedUserName1 = stripString(userName1)
+    val strippedUserName2 = stripString(userName2)
+    val commonFollowed: List[User] = Users.getCommonFollowed(strippedUserName1, strippedUserName2)
+    usersToJsonString(commonFollowed)
+  }
+
+  @cask.get("/users/alsoFollowedBy")
+  def alsoFollowedBy(myUserName: String, checkedUserName: String): String = {
+    val strippedMyUserName = stripString(myUserName)
+    val strippedCheckedUserName = stripString(checkedUserName)
+    val alsoFollowedBy: List[User] = Users.getAlsoFollowedBy(strippedMyUserName, strippedCheckedUserName)
+    usersToJsonString(alsoFollowedBy)
+  }
+
   initialize()
 }
 

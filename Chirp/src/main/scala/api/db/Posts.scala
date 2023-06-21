@@ -73,7 +73,8 @@ object Posts {
   }
 
   def getContentPosts(postContent: String): List[Post] = {
-    getAllPosts.filter(post => post.content.toLowerCase.contains(postContent.toLowerCase))
+    val getContentPostsQuery = s"MATCH (post:POST) WHERE toLower(post.content) CONTAINS \"${postContent.toLowerCase}\" RETURN post"
+    parsePosts(DbManager.executeRequest(getContentPostsQuery))
   }
 
   def getSharedPosts(userName: String): List[Post] = {
