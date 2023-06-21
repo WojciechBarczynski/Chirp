@@ -172,3 +172,11 @@ def react(userName: String, postId: String, reactionType: String)
 
 2. Recommended tags:
 ![image](assets/example_endpoint_return_tags.png)
+
+### Frontend
+
+Unfortunetly, we haven't finish frontend/backend integration. We only have created mock frontend without calls to Scala backend.
+
+Here is quick look how our feed page would look like.
+
+![image](assets/frontend.png)
