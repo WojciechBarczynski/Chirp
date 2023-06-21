@@ -48,25 +48,32 @@ Due to lack of support for scala in Neo4j drivers (there is only one available u
 ![image](https://i.postimg.cc/TwMzfYp2/Untitled-Diagram-drawio-6.png)
 
 ## Recommendation system
+
 Thanks to using graph database, we could easily retrieve most suitable tags and posts.
 
-#### Most used tags query:
+#### Most used tags query
+
 ```scala
 MATCH (post:POST)-[r:TAGGED]->(tag:TAG) RETURN tag, count(r) ORDER BY count(r) DESC LIMIT 10;
 ```
-#### Followed users posts:
+
+#### Followed users posts
+
 ```scala
 MATCH (follower:USER {name:userName})-[:FOLLOW]->(followed:USER)-[:CREATED]->(post:POST) RETURN post;
 ```
-#### Subscribed tags posts:
+
+#### Subscribed tags posts
+
 ```scala
 MATCH (user:USER {name:userName})-[:SUBSCRIBE]->(tag:TAG)<-[:TAGGED]-(post:POST) RETURN post;
 ```
-#### Post reactions:
+
+#### Post reactions
+
 ```scala
 MATCH (user:USER)-[r:REACTED_TO]->(post:POST) WHERE ID(post)=postId RETURN count(r);
 ```
-
 
 ## Backend endpoints
 
@@ -83,20 +90,14 @@ def login(userName: String)
 
 ```scala
   @cask.get("/users/recommendedPosts")
-  def recommendedPosts(userName: String): String = {
-    val recommendedPosts: List[PostInfo] = RecommendationEngine.getUserRecommendedPosts(stripString(userName))
-    postInfosToJsonString(recommendedPosts)
-  }
+  def recommendedPosts(userName: String)
 ```
 
 3. Get recommended tags
 
 ```scala
   @cask.get("tag/recommended")
-  def recommendedTags(): String = {
-    val recommendedTags: List[String] = Tags.getRecommendedTags;
-    tagsToJsonString(recommendedTags)
-  }
+  def recommendedTags()
 ```
 
 4. Create posts with tags
@@ -131,47 +132,33 @@ def react(userName: String, postId: String, reactionType: String)
 
 ```scala
   @cask.post("/users/follow")
-  def followUser(followerUserName: String, followedUserName: String): Unit = {
-    Users.followUser(stripString(followerUserName), stripString(followedUserName));
-  }
+  def followUser(followerUserName: String, followedUserName: String)
 ```
 
 9. Subscribe tag
 
 ```scala
   @cask.post("/tag/subscribe")
-  def subscribe(userName: String, tagName: String): Unit = {
-    val strippedUserName = stripString(userName);
-    val strippedTagName = stripString(tagName);
-    Tags.subscribeTag(strippedUserName, strippedTagName);
-  }
+  def subscribe(userName: String, tagName: String)
 ```
 
 10. Get followed users
 
 ```scala
   @cask.post("/users/followed")
-  def followed(userName: String): String = {
-    val followedUsers: List[User] = Users.getFollowedUsers(stripString(userName))
-    usersToJsonString(followedUsers)
-  }
+  def followed(userName: String)
 ```
 
 11. Get user followers
 
 ```scala
   @cask.post("/users/followers")
-  def followers(userName: String): String = {
-    val followersUsers: List[User] = Users.getFollowersUsers(stripString(userName))
-    usersToJsonString(followersUsers)
-  }
+  def followers(userName: String)
 ```
 
 12. Update user bio
 
 ```scala
   @cask.post("/users/updateBio")
-  def updateBio(userName: String, bio: String): Unit = {
-    Users.updateBio(stripString(userName), stripString(bio))
-  }
+  def updateBio(userName: String, bio: String)
 ```
