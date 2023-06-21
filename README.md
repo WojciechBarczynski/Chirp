@@ -32,20 +32,22 @@ As a user I want to modify profile info such as bio or photo in order to express
 As a user I want to share posts in order to show them to my followers. </br>
 
 ## Database schema
+### Schema
+![image](assets/database_schema.png)
 
-![image](https://i.postimg.cc/5NTFxZqK/353363556-6804737282870149-7967398671731870298-n.png)
-
+### Relations
+![image](assets/relations.png)
 ## Backend schema
 
 ### Initial schema
 
-![image](https://i.postimg.cc/QN5MQHpm/Untitled-Diagram-drawio-5.png)
+![image](assets/initial_backend_schema.png)
 
 Due to lack of support for scala in Neo4j drivers (there is only one available unofficial driver, that is under development), we changed our schema to:
 
 ### Final schema
 
-![image](https://i.postimg.cc/TwMzfYp2/Untitled-Diagram-drawio-6.png)
+![image](assets/new_backend_schema.png)
 
 ## Recommendation system
 
