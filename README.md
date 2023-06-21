@@ -53,7 +53,7 @@ Due to lack of support for scala in Neo4j drivers (there is only one available u
 
 Thanks to using graph database, we could easily retrieve most suitable tags and posts.
 
-We ranked posts based on:
+We rank posts based on:
 1. Their invidual reaction engagement score, based on number of rections
 ![image](assets/recommendation_system_engagement_score.png)
 2. User own preferences score:
@@ -61,7 +61,8 @@ We ranked posts based on:
 ![image](assets/recommedations_follow_score.png)
 - Subscribed tags score: posts tagged with subscribed tags - content-based filtering
 ![image](assets/recommedations_tag_score.png)
-
+3. Post proximity:
+![image](assets/path.png)
 #### Most used tags query
 
 ```scala
