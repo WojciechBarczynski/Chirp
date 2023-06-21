@@ -104,6 +104,22 @@ WHERE length(path) <= maxDistance
 RETURN post
 ```
 
+#### Commonly followed query
+```scala
+MATCH (they:USER {name: userName1})-[r:FOLLOW]->(common:USER)
+WITH common
+MATCH(me: USER {name: userName2}) -[r: FOLLOW]->(common: USER)
+RETURN common
+```
+
+#### Also followe by query
+```scala
+MATCH (me:USER {name: myUserName})-[r:FOLLOW]->(them:USER)
+WITH them
+MATCH (them:USER ) -[r: FOLLOW]->(checked:USER {name: checkedUserName})
+RETURN them"
+````
+
 ## Backend endpoints
 
 We created a few endpoints, that allow to:
