@@ -106,13 +106,13 @@ object Server extends cask.MainRoutes {
     Users.updateBio(stripString(userName), stripString(bio))
   }
 
-  @cask.post("/users/followed")
+  @cask.get("/users/followed")
   def followed(userName: String): String = {
     val followedUsers: List[User] = Users.getFollowedUsers(stripString(userName))
     usersToJsonString(followedUsers)
   }
 
-  @cask.post("/users/followers")
+  @cask.get("/users/followers")
   def followers(userName: String): String = {
     val followersUsers: List[User] = Users.getFollowersUsers(stripString(userName))
     usersToJsonString(followersUsers)

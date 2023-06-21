@@ -32,11 +32,15 @@ As a user I want to modify profile info such as bio or photo in order to express
 As a user I want to share posts in order to show them to my followers. </br>
 
 ## Database schema
+
 ### Schema
+
 ![image](assets/database_schema.png)
 
 ### Relations
+
 ![image](assets/relations.png)
+
 ## Backend schema
 
 ### Initial schema
@@ -54,15 +58,19 @@ Due to lack of support for scala in Neo4j drivers (there is only one available u
 Thanks to using graph database, we could easily retrieve most suitable tags and posts.
 
 We rank posts based on:
+
 1. Their invidual reaction engagement score, based on number of rections
 ![image](assets/recommendation_system_engagement_score.png)
 2. User own preferences score:
+
 - Follow users score: posts created and shared by followed users - collaborative filtering
 ![image](assets/recommedations_follow_score.png)
 - Subscribed tags score: posts tagged with subscribed tags - content-based filtering
 ![image](assets/recommedations_tag_score.png)
+
 3. Post proximity:
 ![image](assets/path.png)
+
 #### Most used tags query
 
 ```scala
@@ -100,91 +108,109 @@ RETURN post
 
 We created a few endpoints, that allow to:
 
-1. Login user / create account
-
+1. Login user / create new if doesn't exits
 ```scala
-@cask.post("/login")
-def login(userName: String)
+  @cask.post("/login")
+  def login(userName: String)
 ```
 
-2. Get user recommended posts
-
+2. Create post
 ```scala
-  @cask.get("/users/recommendedPosts")
-  def recommendedPosts(userName: String)
+  @cask.post("/post/create")
+  def createPost(userName: String, postContent: String, tags: String)
 ```
 
-3. Get recommended tags
-
+3. Comment on post 
 ```scala
-  @cask.get("tag/recommended")
-  def recommendedTags()
+  @cask.post("/post/comment")
+  def createComment(userName: String, commentContent: String, tags: String, postId: String)
 ```
 
-4. Create posts with tags
-
-```scala
-@cask.post("/post/create")
-def createPost(userName: String, postContent: String, tags: String)
-```
-
-5. Comment on posts
-
-```scala
-@cask.post("/post/comment")
-def createComment(userName: String, commentContent: String, tags: String, postId: String)
-```
-
-6. React to post
-
-```scala
-@cask.post("/post/react")
-def react(userName: String, postId: String, reactionType: String)
-```
-
-7. Get post comments
-
+4. Get post comments
 ```scala
   @cask.get("/post/comments")
   def getComments(postId: String)
 ```
 
-8. Follow user
-
+5. React to post
 ```scala
-  @cask.post("/users/follow")
-  def followUser(followerUserName: String, followedUserName: String)
+  @cask.post("/post/react")
+  def react(userName: String, postId: String, reactionType: String)
+```
+
+6. Share post
+```scala
+  @cask.post("/post/share")
+  def share(userName: String, postId: String)
+```
+
+7. Delete post
+```scala
+  @cask.post("/post/delete")
+  def deletePost(postId: String)
+```
+
+8. Update post
+```scala
+  @cask.post("/post/update")
+  def updatePost(userName: String, postId: String, postContent: String)
 ```
 
 9. Subscribe tag
-
 ```scala
   @cask.post("/tag/subscribe")
   def subscribe(userName: String, tagName: String)
 ```
 
-10. Get followed users
-
+10. Get recommended tags
 ```scala
-  @cask.post("/users/followed")
-  def followed(userName: String)
+  @cask.get("tag/recommended")
+  def recommendedTags()
 ```
 
-11. Get user followers
-
+11. Follow user
 ```scala
-  @cask.post("/users/followers")
-  def followers(userName: String)
+  @cask.post("/users/follow")
+  def followUser(followerUserName: String, followedUserName: String)
 ```
 
-12. Update user bio
+12. Get posts recommended for user
+```scala
+  @cask.get("/users/recommendedPosts")
+  def recommendedPosts(userName: String)
+```
 
+13. Update bio
 ```scala
   @cask.post("/users/updateBio")
   def updateBio(userName: String, bio: String)
 ```
 
-### Example returns:
+14. Get profiles followed by user
+```scala
+  @cask.get("/users/followed")
+  def followed(userName: String)
+```
+  
+15. Get profiles following user
+```scala
+  @cask.get("/users/followers")
+  def followers(userName: String)
+```
+
+16. Get profiles followed commonly by two users
+```scala
+  @cask.get("/users/commonFollowed")
+  def commonFollowed(userName1: String, userName2: String)
+```
+
+17. Get profiles also following certain user
+```scala
+  @cask.get("/users/alsoFollowedBy")
+  def alsoFollowedBy(myUserName: String, checkedUserName: String)
+```
+
+### Example returns
 
 1. Recommended posts:
 ![image](assets/example_endpoint_return_posts.png)
@@ -194,8 +220,8 @@ def react(userName: String, postId: String, reactionType: String)
 
 ### Frontend
 
-Unfortunetly, we haven't finish frontend/backend integration. We only have created mock frontend without calls to Scala backend.
+Unfortunately, we haven't finished our frontend/backend integration. We have only created mock frontend without calls to Scala backend.
 
-Here is quick look how our feed page would look like.
+Here is quick look of how our feed page would look like.
 
 ![image](assets/frontend.png)
