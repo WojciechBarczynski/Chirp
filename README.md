@@ -87,6 +87,15 @@ MATCH (user:USER {name:userName})-[:SUBSCRIBE]->(tag:TAG)<-[:TAGGED]-(post:POST)
 MATCH (user:USER)-[r:REACTED_TO]->(post:POST) WHERE ID(post)=postId RETURN count(r);
 ```
 
+#### Post proximity query
+
+```scala
+MATCH (user:USER {name: userName}), (post:POST), path = shortestPath((user)-[*]-(post))
+WITH path, post 
+WHERE length(path) <= maxDistance
+RETURN post
+```
+
 ## Backend endpoints
 
 We created a few endpoints, that allow to:
