@@ -91,6 +91,7 @@ object Posts {
     val getPostCommentSQuery = s"MATCH (comment:POST)-[:COMMENTED]->(post:POST) WHERE ID(post)=${postId} RETURN comment;"
     parsePosts(DbManager.executeRequest(getPostCommentSQuery)).map(post => postInfo(post))
   }
+
   def getPostCommentCount(postId: String): Int = {
     val getCommentCountQuery = s"MATCH (comment:POST)-[:COMMENTED]->(post:POST) WHERE ID(post)=${postId} RETURN COUNT(comment);"
     DbManager.executeCountRequest(getCommentCountQuery).toInt
@@ -99,10 +100,30 @@ object Posts {
   def getPostByDistance(userName: String, maxDistance: Int): List[Post] = {
     val getPostByDistanceQuery =
       s"MATCH (user:USER {name: \"${userName}\"}), (post:POST), " +
-      s"path = shortestPath((user)-[*]-(post)) " +
-      s"WITH path, post " +
-      s"WHERE length (path) <= ${maxDistance} " +
-      s"RETURN post"
+        s"path = shortestPath((user)-[*]-(post)) " +
+        s"WITH path, post " +
+        s"WHERE length (path) <= ${maxDistance} " +
+        s"RETURN post"
     parsePosts(DbManager.executeRequest(getPostByDistanceQuery))
+  }
+
+  def deletePost(postId: String): Unit = {
+    val deletePostQuery = s"MATCH (post:POST) WHERE ID(post)=${postId} DETACH DELETE post"
+    DbManager.executeRequest(deletePostQuery)
+  }
+
+  def isPostAuthor(userName: String, postId: String): Boolean = {
+    val isPostAuthorQuery = s"MATCH (user:USER {name: \"${userName}\"})-[r:CREATED]->(post:POST) WHERE ID(post)=${postId} RETURN post"
+    parsePosts(DbManager.executeRequest(isPostAuthorQuery)).nonEmpty
+  }
+
+  def updatePostContent(postId: String, postContent: String): Unit = {
+    val updatePostContentQuery = s"MATCH (post:POST) WHERE ID(post)=${postId} SET post.content=\"${postContent}\""
+    DbManager.executeRequest(updatePostContentQuery)
+  }
+
+  def updatePost(userName: String, postId: String, postContent: String): Unit = {
+    if isPostAuthor(userName, postId) then
+      updatePostContent(postId, postContent)
   }
 }
