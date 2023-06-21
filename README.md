@@ -2,7 +2,7 @@
 
 A simple social media platform, written in Scala with graph database system.
 
-<img src="https://user-images.githubusercontent.com/104033489/234817071-b00870ba-83d5-4e75-9cfa-b0ef01bb2e59.png" width="500">
+<img src="https://user-images.githubusercontent.com/104033489/234817071-b00870ba-83d5-4e75-9cfa-b0ef01bb2e59.png" width="800">
 
 ## Authors
 
