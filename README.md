@@ -117,7 +117,7 @@ RETURN common
 MATCH (me:USER {name: myUserName})-[r:FOLLOW]->(them:USER)
 WITH them
 MATCH (them:USER ) -[r: FOLLOW]->(checked:USER {name: checkedUserName})
-RETURN them"
+RETURN them
 ````
 
 ## Backend endpoints
