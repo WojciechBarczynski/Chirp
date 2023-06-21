@@ -58,7 +58,8 @@ object Users {
   }
 
   def getContentUsers(userContent: String): List[User] = {
-    getAllUsers.filter(user => user.name.toLowerCase.contains(userContent.toLowerCase))
+    val contentUserQuery = s"MATCH (user:USER) WHERE toLower(user.name) CONTAINS \"${userContent.toLowerCase}\" RETURN user"
+    parseUsers(DbManager.executeRequest(contentUserQuery))
   }
 
   def getFollowedUsers(userName: String): List[User] = {
@@ -73,6 +74,24 @@ object Users {
 
   def getFollowersCount(userName: String): Int = {
     getFollowersUsers(userName).length
+  }
+
+  def getCommonFollowed(userName1: String, userName2: String): List[User] = {
+    val getCommonFollowedQuery =
+      s"MATCH (they:USER {name: \"${userName1}\"})-[r:FOLLOW]->(common:USER) " +
+      s"WITH common " +
+      s"MATCH(me: USER {name: \"${userName2}\"}) -[r: FOLLOW]->(common: USER) " +
+      s"RETURN common"
+    parseUsers(DbManager.executeRequest(getCommonFollowedQuery))
+  }
+
+  def getAlsoFollowedBy(myUserName: String, checkedUserName: String): List[User] = {
+    val getAlsoFollowedByQuery =
+      s"MATCH (me:USER {name: \"${myUserName}\"})-[r:FOLLOW]->(them:USER) " +
+      s"WITH them " +
+      s"MATCH (them:USER ) -[r: FOLLOW]->(checked:USER {name: \"${checkedUserName}\"}) " +
+      s"RETURN them"
+    parseUsers(DbManager.executeRequest(getAlsoFollowedByQuery))
   }
 }
 
