@@ -98,7 +98,7 @@ MATCH (user:USER)-[r:REACTED_TO]->(post:POST) WHERE ID(post)=postId RETURN count
 #### Post proximity query
 
 ```scala
-MATCH (user:USER {name: userName}), (post:POST), path = shortestPath((user)-[*]-(post))
+MATCH (user:USER {name:userName}), (post:POST), path = shortestPath((user)-[*]-(post))
 WITH path, post 
 WHERE length(path) <= maxDistance
 RETURN post
@@ -106,17 +106,17 @@ RETURN post
 
 #### Commonly followed query
 ```scala
-MATCH (they:USER {name: userName1})-[r:FOLLOW]->(common:USER)
+MATCH (they:USER {name:userName1})-[r:FOLLOW]->(common:USER)
 WITH common
-MATCH(me: USER {name: userName2}) -[r: FOLLOW]->(common: USER)
+MATCH(me:USER {name:userName2})-[r: FOLLOW]->(common:USER)
 RETURN common
 ```
 
 #### Also followe by query
 ```scala
-MATCH (me:USER {name: myUserName})-[r:FOLLOW]->(them:USER)
+MATCH (me:USER {name:myUserName})-[r:FOLLOW]->(them:USER)
 WITH them
-MATCH (them:USER ) -[r: FOLLOW]->(checked:USER {name: checkedUserName})
+MATCH (them:USER)-[r: FOLLOW]->(checked:USER {name:checkedUserName})
 RETURN them
 ````
 
