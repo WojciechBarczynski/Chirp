@@ -11,7 +11,7 @@ object Posts {
       s"MATCH (post:POST), (user:USER {name: \"${userName}\"}) " +
         s"WHERE ID(post) = ${postId} " +
         s"CREATE (user)-[r:REACTED_TO {reactionType: \"${reactionTypeToString(reactionType)}\"}]->(post);";
-    DbManager.executeRequest(createReactionQuery);
+    DbManager.executeRequest(createReactionQuery)
   }
 
   def createPost(userName: String, postContent: String, tags: List[String]): String = {
@@ -30,7 +30,7 @@ object Posts {
     DbManager.executeRequest(createdQuery)
 
     tags.foreach(tagName =>
-      Tags.createTag(tagName);
+      Tags.createTag(tagName)
       Tags.tagPost(createdPost.id, tagName);
     )
     createdPost.id
@@ -53,7 +53,7 @@ object Posts {
   }
 
   def getAllPosts: List[Post] = {
-    val getAllPostsQuery = s"MATCH (post:POST) RETURN post;";
+    val getAllPostsQuery = s"MATCH (post:POST) RETURN post;"
     parsePosts(DbManager.executeRequest(getAllPostsQuery))
   }
 
@@ -94,5 +94,15 @@ object Posts {
   def getPostCommentCount(postId: String): Int = {
     val getCommentCountQuery = s"MATCH (comment:POST)-[:COMMENTED]->(post:POST) WHERE ID(post)=${postId} RETURN COUNT(comment);"
     DbManager.executeCountRequest(getCommentCountQuery).toInt
+  }
+
+  def getPostByDistance(userName: String, maxDistance: Int): List[Post] = {
+    val getPostByDistanceQuery =
+      s"MATCH (user:USER {name: \"${userName}\"}), (post:POST), " +
+      s"path = shortestPath((user)-[*]-(post)) " +
+      s"WITH path, post " +
+      s"WHERE length (path) <= ${maxDistance} " +
+      s"RETURN post"
+    parsePosts(DbManager.executeRequest(getPostByDistanceQuery))
   }
 }

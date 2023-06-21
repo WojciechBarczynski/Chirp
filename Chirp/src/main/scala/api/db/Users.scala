@@ -5,11 +5,11 @@ import objects.nodes.parseUsers
 
 object Users {
   def logUser(userName: String): Unit = {
-    if readUser(userName).isEmpty then createUser(userName);
+    if readUser(userName).isEmpty then createUser(userName)
   }
 
   def followUser(followerUserName: String, followedUserName: String): Unit = {
-    if (!isFollowed(followerUserName, followedUserName)) then
+    if !isFollowed(followerUserName, followedUserName) then
       val followUserQuery = s"MATCH (follower:USER {name: \"${followerUserName}\"}), " +
         s"(followed:USER {name: \"${followedUserName}\"}) " +
         s"CREATE (follower)-[r:FOLLOW]->(followed);"
@@ -20,7 +20,7 @@ object Users {
     val followUserQuery = s"MATCH (follower:USER {name: \"${followerUserName}\"})" +
       s"-[r:FOLLOW]->(followed:USER {name: \"${followedUserName}\"}) " +
       s"RETURN r;"
-    if (DbManager.executeRequest(followUserQuery) == "[]\n") then
+    if DbManager.executeRequest(followUserQuery) == "[]\n" then
       false
     else
       true
@@ -33,8 +33,8 @@ object Users {
   }
 
   def readUser(userName: String): Option[User] = {
-    val userMatch = s"MATCH (n:USER {name: \"${userName}\"}) RETURN n;";
-    val response = DbManager.executeRequest(userMatch);
+    val userMatch = s"MATCH (n:USER {name: \"${userName}\"}) RETURN n;"
+    val response = DbManager.executeRequest(userMatch)
 
     parseUsers(response) match
       case List(user) => Some(user)
@@ -44,7 +44,7 @@ object Users {
 
   def updateBio(userName: String, bio: String): Unit = {
     val userUpdateBioQuery = s"MATCH (user:USER {name: \"${userName}\"}) SET user.bio = \"${bio}\" RETURN user;"
-    DbManager.executeRequest(userUpdateBioQuery);
+    DbManager.executeRequest(userUpdateBioQuery)
   }
 
   private def createUser(userName: String) = {
@@ -53,7 +53,7 @@ object Users {
   }
 
   def getAllUsers: List[User] = {
-    val getAllUsersQuery = s"MATCH (user:USER) RETURN user;";
+    val getAllUsersQuery = s"MATCH (user:USER) RETURN user;"
     parseUsers(DbManager.executeRequest(getAllUsersQuery))
   }
 
