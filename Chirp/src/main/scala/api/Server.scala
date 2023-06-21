@@ -63,6 +63,20 @@ object Server extends cask.MainRoutes {
     Posts.sharePost(strippedUserName, strippedPostId)
   }
 
+  @cask.post("/post/delete")
+  def deletePost(postId: String): Unit = {
+    val strippedPostId = stripString(postId)
+    Posts.deletePost(strippedPostId)
+  }
+
+  @cask.post("/post/update")
+  def updatePost(userName: String, postId: String, postContent: String): Unit = {
+    val strippedUserName = stripString(userName)
+    val strippedPostId = stripString(postId)
+    val strippedPostContent = stripString(postContent)
+    Posts.updatePost(strippedUserName, strippedPostId, strippedPostContent)
+  }
+
   @cask.post("/tag/subscribe")
   def subscribe(userName: String, tagName: String): Unit = {
     val strippedUserName = stripString(userName)
@@ -119,7 +133,6 @@ object Server extends cask.MainRoutes {
     val alsoFollowedBy: List[User] = Users.getAlsoFollowedBy(strippedMyUserName, strippedCheckedUserName)
     usersToJsonString(alsoFollowedBy)
   }
-
   initialize()
 }
 
