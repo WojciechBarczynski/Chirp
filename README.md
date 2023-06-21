@@ -164,3 +164,11 @@ def react(userName: String, postId: String, reactionType: String)
   @cask.post("/users/updateBio")
   def updateBio(userName: String, bio: String)
 ```
+
+### Example returns:
+
+1. Recommended posts:
+![image](assets/example_endpoint_return_posts.png)
+
+2. Recommended tags:
+![image](assets/example_endpoint_return_tags.png)
