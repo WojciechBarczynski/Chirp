@@ -1,4 +1,4 @@
-# Chirp - Project for Database course at AGH UST
+# Chirp - simple social media platform
 
 A simple social media platform, written in Scala with graph database system.
 
